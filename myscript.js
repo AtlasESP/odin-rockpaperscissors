@@ -1,65 +1,75 @@
-let playerScore = 0;
-let computerScore = 0;
 
-//get computer to pick randomly between rock, paper or scissors
+const options = ["rock","paper","scissors"];
 
 function getComputerChoice() {
-    let computerChoice = ["Rock","Paper","Scissors"];
-    return computerChoice[Math.floor(Math.random() * computerChoice.length)];
+    const choice = options[Math.floor(Math.random() * options.length)];
+    return choice;
 }
 
-function toUpper(string) {
-    return string.toUpperCase();
-}
-//create a round of rock paper scissors to play.
-
-    function playRound(playerSelection, computerSelection) {
-     if (playerSelection === computerSelection) {
-        return `It's a tie! ${playerSelection} to ${computerSelection}`
-    } else if (playerSelection === "Rock" && computerSelection === "Scissors") {
-        playerScore += 1;
-        return "Player wins! Rock beats Scissors";
-
-    } else if (playerSelection === "Paper" && computerSelection === "Rock") {
-        playerScore += 1;
-        return "Player wins! Paper beats Rock";
-        
-
-    } else if (playerSelection === "Scissors" && computerSelection === "Paper") {
-        playerScore += 1;
-        return "Player wins! Scissors beats Paper";
-        
+function checkWinner(playerSelection, computerSelection) {
+    if (playerSelection === computerSelection) {
+        return "Tie"
+    } else if(
+        (playerSelection == "rock" && computerSelection == "scissors") ||
+        (playerSelection == "scissors" && computerSelection == "paper") ||
+        (playerSelection == "paper" && computerSelection == "rock")
+    ){
+        return "Player";
     } else {
-        computerScore += 1;
-        return `Computer wins! ${computerSelection} beats ${playerSelection}`;
-        
+        return "Computer";
     }
-}  
 
-function getScore() {
-    if (playerScore > computerScore) {
-        console.log(`Score is ${playerScore}:${computerScore}`)
-    } else if (computerScore > playerScore) {
-        console.log(`Score is ${playerScore}:${computerScore}`)
-    } else { 
-        console.log(`Score is ${playerScore}:${computerScore}`)
+
+}
+    function playRound(playerSelection, computerSelection) {
+        const result = checkWinner(playerSelection, computerSelection);
+        if(result == "Tie"){
+            return "It's a tie!"
+        } else if (result == "Player"){
+            return `You win! ${playerSelection} beats ${computerSelection}`
+        } else { 
+            return `You Lose! ${computerSelection} beats ${playerSelection}`
+        }
+    }
+    
+function getPlayerChoice() {
+    let validatedInput = false;
+    while(validatedInput == false){
+        const choice = prompt("Rock, Paper, or Scissors");
+        if(choice == null){
+            continue;
+        }
+        const choiceInLower = choice.toLowerCase()
+        if(options.includes(choiceInLower)){
+            validatedInput = true;
+            return choiceInLower;
+
+        }
     }
 }
 
-
-// create a 5 round game that keeps score and reports a winner or loser.
 
     function game() {
+    let scorePlayer = 0;
+    let scoreComputer = 0;
+    for (let i = 0; i < 5; i++) {
+        const playerSelection = getPlayerChoice()
         const computerSelection = getComputerChoice();
-        const playerSelection = prompt("Rock, Paper or Scissors")
-        playRound();
-        getScore();
         console.log(playRound(playerSelection, computerSelection));
+        if(checkWinner(playerSelection, computerSelection) == "Player"){
+            scorePlayer++;
         } 
+        else if (checkWinner(playerSelection, computerSelection) == "Computer"){
+            scoreComputer++;
+        }
+    }
+    if (scorePlayer > scoreComputer) {
+        console.log("Player was the winner")
+    } else if (scorePlayer < scoreComputer) {
+        console.log("Computer was the winner");
+    } else {
+        console.log("We have a tie!")
+    }
+}
 
-        
-    game();
-    game();
-    game();
-    game();
-    game();
+game()
